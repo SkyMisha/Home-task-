@@ -1,2 +1,2 @@
-# Home-task-
+# Home-task
 Running tests for different languages
