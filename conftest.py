@@ -8,6 +8,16 @@ from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.firefox.options import Options as OptionsFirefox
 
 
+@pytest.fixture(scope="function")
+def browser():
+    print("\nStart browser for test..")
+    browser = webdriver.Chrome()
+    browser.implicitly_wait(20)
+    yield browser
+    print("\nQuit browser..")
+    browser.quit()
+
+
 def pytest_addoption(parser):
     parser.addoption('--language', action='store', default="en",
                      help='Choose from langs: (en/ru/ua/...)')
