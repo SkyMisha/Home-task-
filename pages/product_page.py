@@ -46,4 +46,14 @@ class ProductPage(BasePage):
         assert prise == current_price
         print("Price ok")
 
-    # def chek_link_parametr(self):
+    def message_is_not_present_after_adding_product(self):
+        assert self.is_not_element_present(*ProductPageLocators.PRODUCT_ADDED_MESSAGE),\
+            "Message is present but shouldn't be"
+
+    def message_is_not_present_in_case_we_dont_add_the_product_to_the_basket(self):
+        assert self.is_not_element_present(*ProductPageLocators.PRODUCT_ADDED_MESSAGE),\
+            "Message is present but shouldn't be"
+
+    def message_disappeared_adding_product(self):
+        assert self.is_disappeared(*ProductPageLocators.PRODUCT_ADDED_MESSAGE),\
+            "The message is not disappeared but should"
