@@ -1,6 +1,10 @@
+import time
+
 import pytest
 
+from pages.base_page import BasePage
 from pages.basket_page import BasketPage
+from pages.login_page import LoginPage
 from pages.main_page import MainPage
 from pages.product_page import ProductPage
 
@@ -60,7 +64,6 @@ def test_message_disappeared_after_adding_product_to_basket(browser):
     page. message_disappeared_adding_product()
 
 
-# @pytest.mark.test1
 def test_guest_should_see_login_link_on_product_page(browser):
     link = "http://selenium1py.pythonanywhere.com/en-gb/catalogue/the-city-and-the-stars_95/"
     page = ProductPage(browser, link)
@@ -68,7 +71,6 @@ def test_guest_should_see_login_link_on_product_page(browser):
     page.should_be_login_link()
 
 
-# @pytest.mark.test2
 def test_guest_can_go_to_login_page_from_product_page(browser):
     link = "http://selenium1py.pythonanywhere.com/en-gb/catalogue/the-city-and-the-stars_95/"
     page = ProductPage(browser, link)
@@ -83,3 +85,32 @@ def test_guest_cant_see_product_in_basket_opened_from_product_page(browser):
     basket_page = page.go_to_basket()
     basket_page.product_is_not_present()
     basket_page.basket_is_empty()
+
+
+class TestUserAddToBasketFromProductPage:
+    @pytest.fixture(scope="function", autouse=True)
+    def setup(self, browser):
+        link = "http://selenium1py.pythonanywhere.com/"
+        main_page = MainPage(browser, link)
+        main_page.open()
+        login_page = main_page.go_to_login_page()  # type: LoginPage
+        login_page.register_new_user(f"{str(time.time())}test@gmvasdgail.com", "12fgfd345")
+        login_page.should_be_authorized_user()
+
+    def test_user_cant_see_success_message(self, browser):
+        link = "http://selenium1py.pythonanywhere.com/catalogue/coders-at-work_207/?promo=newYear2019"
+        page = ProductPage(browser, link)
+        page.open()
+        page.message_is_not_present_in_case_we_dont_add_the_product_to_the_basket()
+
+    def test_user_can_add_product_to_basket(self, browser):
+        link = "http://selenium1py.pythonanywhere.com/catalogue/coders-at-work_207/?promo=newYear2019"
+        page = ProductPage(browser, link)
+        page.open()
+        page.add_product_to_basket()
+        page.solve_quiz_and_get_code()
+        page.should_be_added_message()
+        page.should_be_price_in_basket_message()
+        page.product_name_check()
+        page.product_price_check()
+
