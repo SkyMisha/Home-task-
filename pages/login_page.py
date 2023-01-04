@@ -8,8 +8,8 @@ class LoginPage(BasePage):
         self.should_be_login_form()
         self.should_be_register_form()
 
-    # def is_login_url(self):
-    #     return True if 'login' in self.url else False
+    def is_login_url(self):
+        return True if 'login' in self.url else False
 
     def should_be_login_url(self):
         assert "login" in self.url
